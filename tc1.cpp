@@ -31,23 +31,42 @@ Iterador Arbol::end() {
   }
 }
 
-Arbol::Iterador::operator++ () {
-  //Si tiene que procesar
-  if((!actual->hijo[IZQ] && !actual->hijo[DER]) || pila.top()->elemento > actual->elemento) {
-    //Sube
-    Nodo* tmp = pila.pop();
-    actual = pila.top();
-    pila.push(tmp);
-
-  } else {
-    //Si tiene que moverse a la izquierda
-    if (actual->hijo[IZQ] && pila.top()->elemento > actual->hijo[IZQ]->elemento){
-      actual = actual->hijo[IZQ];
-      pila.push(actual);
-    }
-    //Si tiene que moverse a la derecha
-    if (actual->hijo[DER] && actual->hijo[DER] > pila.top){
-      actual = actual->hijo[DER];
-    }
-  }
+void Arbol::Iterador::operator ++ () {
+	//Si tiene hijos
+	if (actual->hijos[IZQ] || actual->hijos[DER]) {
+		//Si tiene que ir a la izquierda
+		if (!pila.vacia() && pila.tope()->elemento == actual->elemento) {
+			//Mete el izquierdo
+			pila.push(actual->hijos[IZQ]);
+			//Mueve el actual al izquierdo
+			actual = actual->hijos[IZQ];
+		}
+		//Si tiene que ir a la derecha
+		if (!pila.vacia() && pila.tope()->elemento == actual->hijos[IZQ]->elemento) {
+			//Saca el izquierdo
+			pila.pop()
+			//Mete el derecho
+			pila.pop(actual->hijos[DER]);
+			//Cambia actual a derecho
+			actual = actual->hijos[DER];
+		}
+		//Si tiene que subir a partir de una hoja intermedia
+		if(actual->hijos[DER]->elemento == pila.top()->elemento) {
+			//Saca al derecho
+			pila.pop();
+			//Se saca a si mismo de manera temporal
+			Nodo* tmp = pila.pop();
+			//Manda el actual hacia arriba
+			actual = pila.top();
+			//Se vuelve a meter
+			pila.push(tmp);
+		}
+	} else {
+		Nodo* tem = pila.pop();
+		//Manda el actual hacia arriba
+		actual = pila.top();
+		//Se vuelve a meter
+		pila.push(tem);
+	}
+	return this;
 }
