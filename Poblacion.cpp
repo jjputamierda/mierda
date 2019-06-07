@@ -4,13 +4,13 @@ Poblacion::Celda::Celda(Criatura * elemento){
    anterior = 0;
    siguiente = 0;
    if(elemento){
-      this->elemento = elemento->clonar();   
+      this->elemento = elemento->clonar();
    }
    else {
-	  this->elemento=elemento; 
+	  this->elemento=elemento;
    }
 }
-Poblacion::Celda::~Celda(){ 
+Poblacion::Celda::~Celda(){
   if(siguiente){
 	  delete siguiente;
   }
@@ -46,14 +46,14 @@ int Poblacion::Iterador::operator==(const Poblacion::Iterador & otro){
 
 
 int Poblacion::Iterador::operator!=(const Poblacion::Iterador & otro){
-	return this->actual != otro.actual;	
+	return this->actual != otro.actual;
 }
 Criatura * & Poblacion::Iterador::operator*(){
 	return actual->elemento;
 }
 
 Poblacion * Poblacion::clonar(){
-	Poblacion * nuevaPtr = new Poblacion();	   
+	Poblacion * nuevaPtr = new Poblacion();
 	Poblacion::Iterador fin = nuevaPtr->end();
     for( Poblacion::Iterador i = this->begin(); i != this->end(); ++i){
          nuevaPtr->insertar(fin,*i);
@@ -69,7 +69,7 @@ Poblacion::Poblacion(){
 
 Poblacion::~Poblacion(){
    if(primera){
-      delete primera;	   
+      delete primera;
    }
 }
 
@@ -93,7 +93,7 @@ void Poblacion::insertar(Poblacion::Iterador & iterador, Criatura * valor){
 			nueva->siguiente = primera;
 			primera->anterior = nueva;
 			primera = nueva;
-		}		
+		}
 	}
 	else {
 		if(iterador==end()){
@@ -106,37 +106,19 @@ void Poblacion::insertar(Poblacion::Iterador & iterador, Criatura * valor){
 			nueva->siguiente = iterador.actual;
 			nueva->anterior->siguiente = nueva;
 			nueva->siguiente->anterior = nueva;
-			// iterador.actual->anterior = nueva;			
-		}	
+			// iterador.actual->anterior = nueva;
+		}
 	}
 }
 
 ostream& Poblacion::imprimir( ostream& salida ){
    Poblacion::Iterador inicioIterator = begin();
    Poblacion::Iterador finalIterator = end();
-   
+
    for(Poblacion::Iterador it = inicioIterator; it!= finalIterator; ++it){
       salida << *it;
       salida << " ";
-   } 
-   
+   }
+
    return salida;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
