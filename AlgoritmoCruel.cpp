@@ -40,7 +40,8 @@ Poblacion *AlgoritmoCruel::evolucionar(Poblacion *inicial){
 				tempPuntaje = puntaje[l];
 				int j = l - 1;
 				while ( (puntaje[j] > tempPuntaje) && (j >= 0) ){
-					puntaje[j+1] = puntaje[j--];
+					puntaje[j+1] = puntaje[j];
+					j--;
 					puntaje[j+1] = tempPuntaje;
 				}
 			}
