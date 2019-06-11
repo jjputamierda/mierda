@@ -103,4 +103,3 @@ Poblacion *AlgoritmoCruel::evolucionar(Poblacion *inicial){
 		}
 	return generacionActual;
  }
-}
