@@ -1,10 +1,10 @@
-#include "AlgoritmoMutativo.h"
+#include "GeneticoMutativo.h"
 
-AlgoritmoMutativo::AlgoritmoMutativo(){
-	this->setNombre("AlgoritmoMutativo");
+GeneticoMutativo::GeneticoMutativo(){
+	this->setNombre("GeneticoMutativo");
 }
 
-Poblacion *AlgoritmoMutativo::evolucionar(Poblacion *inicial){
+Poblacion *GeneticoMutativo::evolucionar(Poblacion *inicial){
 	Poblacion *generacionActual = inicial;
 
 	if (ambientePtr){
@@ -38,15 +38,25 @@ Poblacion *AlgoritmoMutativo::evolucionar(Poblacion *inicial){
 
 			for (int l = 1; l < contador; ++l){
 				tempPuntaje = puntaje[l];
-				j = l - 1;
-				while ( (puntaje[j] > tempPuntaje) && (j >= 0) )
-				lista[j+1] = lista[j--];
-				lista[j+1] = tempPuntaje;
+				int j = l - 1;
+				while ( (puntaje[j] > tempPuntaje) && (j >= 0) ){
+					puntaje[j+1] = puntaje[j];
+					j--;
+					puntaje[j+1] = tempPuntaje;
 				}
 			}
 
 			// REVISA SI EL MENOS APTO DE LA POBLACION ESTA PERFECTAMENTE ADAPTADO
 			poblacionPerfecta = puntaje[contador] == 1;
+
+			// 1. PASAR EL 10% DE LOS MAS APTOS DIRECTAMENTE A LA generacionSiguiente GENERACION
+			int posVeinte = (int)(0.1 * contador);
+			int cantidadSeleccionados = 0;
+			Poblacion::Iterador fin = generacionSiguiente->end();
+			for (int j = 0; j < posVeinte; ++j){
+				generacionSiguiente->insertar(fin, criaturas[j]);
+				cantidadSeleccionados++;
+			}
 
 			while (cantidadSeleccionados < ambientePtr->getCantidadCriaturas())
 			{
@@ -57,13 +67,13 @@ Poblacion *AlgoritmoMutativo::evolucionar(Poblacion *inicial){
 			Criatura **hijo = 0;
 				while (!padresOK)
 				{
-					padre = (int)(((double)rand() / RAND_MAX/2) * contador);
-					madre = (int)(((double)rand() / RAND_MAX/2) * contador);
-					cortePadre = (int)(((double)rand() / RAND_MAX/2) * contador);
-					corteMadre = (int)(((double)rand() / RAND_MAX/2) * contador);
+					padre = (int)(((double)rand() / RAND_MAX) * contador);
+					madre = (int)(((double)rand() / RAND_MAX) * contador);
+					cortePadre = (int)(((double)rand() / RAND_MAX) * contador);
+					corteMadre = (int)(((double)rand() / RAND_MAX) * contador);
 					padresOK = padre != madre && padre <= cortePadre && madre <= corteMadre;
 				}
-				// 1. COMPLETO EL 100% RESTANTE CON LOS HIJOS DE DOS CRIATURAS (entre el mejor 50%) EN generacionSiguiente
+				// 2. COMPLETO EL 90% RESTANTE CON LOS HIJOS DE DOS CRIATURAS (entre el mejor 50%) EN generacionSiguiente
 				//    - PARA CALIFICAR LAS CRIATURAS SELECCIONADAS DEBEN TENER UN PUNTAJE MAYOR QUE SU PROBABILIDAD
 				hijo = criaturas[padre]->cruzar(criaturas[madre]);
 				// Agrega los hijos a la siguiente generacion
@@ -78,7 +88,7 @@ Poblacion *AlgoritmoMutativo::evolucionar(Poblacion *inicial){
 			}
 			// DECIDIR SI HAY MUTACION Y SE LA APLICO ALEATORIAMETE A ALGUNA CRIATURA
 			int corteMutuacion = PROBABILIDAD_MUTUACION;
-			int probabilidad =  (int) (((double)rand() / RAND_MAX) * 80);
+			int probabilidad =  (int) (((double)rand() / RAND_MAX) * 70);//70% ya que en un algoritmo mutativo muchos deberían mutar
 			cout << "Probabilidad de mutuacion: " << probabilidad << endl;
 			if(probabilidad <= corteMutuacion){
 				int criaturaAMutar = (int) (((double)rand() / RAND_MAX) * contador);
@@ -91,6 +101,5 @@ Poblacion *AlgoritmoMutativo::evolucionar(Poblacion *inicial){
 			generacionActual = generacionSiguiente;
 			cout << "Termine generacion " << cantidadGeneraciones << endl;
 		}
-	}
 	return generacionActual;
-}
+ }
