@@ -38,10 +38,10 @@ Poblacion *AlgoritmoCruel::evolucionar(Poblacion *inicial){
 
 			for (int l = 1; l < contador; ++l){
 				tempPuntaje = puntaje[l];
-				j = l - 1;
-				while ( (puntaje[j] > tempPuntaje) && (j >= 0) )
-				lista[j+1] = lista[j--];
-				lista[j+1] = tempPuntaje;
+				int j = l - 1;
+				while ( (puntaje[j] > tempPuntaje) && (j >= 0) ){
+					lista[j+1] = lista[j--];
+					lista[j+1] = tempPuntaje;
 				}
 			}
 
@@ -100,6 +100,5 @@ Poblacion *AlgoritmoCruel::evolucionar(Poblacion *inicial){
 			generacionActual = generacionSiguiente;
 			cout << "Termine generacion " << cantidadGeneraciones << endl;
 		}
-	}
 	return generacionActual;
 }
