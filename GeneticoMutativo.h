@@ -6,8 +6,8 @@
 #define PROBABILIDAD_MUTUACION 50
 class AlgoritmoMutativo: public Algoritmo {
 	public:
-	   AlgoritmoMutativo();
-       Poblacion * evolucionar( Poblacion * );
+	  AlgoritmoMutativo();
+    Poblacion * evolucionar( Poblacion * );
 };
 
 #endif
